@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-  standalone:
+  pulsar:
     image: apachepulsar/pulsar:2.7.0
     container_name: pulsar
     ports:
@@ -12,6 +12,18 @@ services:
       - pulsardata:/pulsar/data
       - pulsarconf:/pulsar/conf
     command: /bin/bash -c "bin/pulsar standalone"
+  dashboard:
+    image: apachepulsar/pulsar-manager:v0.2.0
+    container_name: puslar-dashboard
+    ports:
+      - "9527:9527"
+      - "7750:7750"
+    depends_on:
+      - pulsar
+    links:
+      - pulsar
+    environment:
+      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
 volumes:
   pulsardata:
   pulsarconf:
